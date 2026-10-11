@@ -1,0 +1,90 @@
+{
+  // Fixture for the parser tests. Comments and trailing commas are legal in
+  // tasks.json, so this file exercises both on purpose.
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "clean",
+      "detail": "Remove build output",
+      "type": "process",
+      "command": "rm",
+      "args": ["-rf", "out"],
+      "group": "build",
+    },
+    {
+      "label": "build",
+      "detail": "Compile the project",
+      "type": "process",
+      "command": "make",
+      "args": [{ "value": "--jobs", "quoting": "escape" }, "4"],
+      "group": { "kind": "build", "isDefault": true },
+      "dependsOn": ["clean"],
+    },
+    {
+      "label": "test",
+      "type": "shell",
+      "command": "npm",
+      "args": "test",
+      "group": "test",
+    },
+    {
+      // Compound task: no `type` of its own, only `dependsOn`.
+      "label": "verify",
+      "detail": "Clean, build and test in order",
+      "dependsOrder": "sequence",
+      "dependsOn": ["clean", "build", { "type": "npm", "task": "lint" }],
+    },
+    {
+      "label": "watch",
+      "type": "shell",
+      "command": "make",
+      "args": ["watch"],
+      "isBackground": true,
+    },
+    {
+      "label": "release",
+      "type": "process",
+      "command": "make",
+      "args": ["release"],
+      "windows": { "command": "nmake", "args": ["release"] },
+      "osx": { "command": "gmake", "args": ["release"] },
+      "linux": { "command": "make", "args": ["release-linux"] },
+    },
+    {
+      "label": "deploy",
+      "type": "shell",
+      "command": "deploy",
+      "args": ["--env", "${input:environment}"],
+    },
+    {
+      "label": "package",
+      "type": "npm",
+      "script": "build",
+    },
+    {
+      "label": "format",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["format", "style", "${workspaceFolder}/App.slnx", "--severity", "info"],
+    },
+    {
+      "label": "docs",
+      "dependsOn": ["missing-task", "npm: lint"],
+    },
+    {
+      // Carries a shared prefix, so the labelPrefix setting has something to strip.
+      "label": "Task Runner: lint",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "lint"],
+    },
+    {
+      // `hide` mirrors the tasks.json schema: VS Code keeps such tasks out of its
+      // own run task quick pick, and so do we.
+      "label": "internal",
+      "type": "shell",
+      "command": "true",
+      "hide": true,
+    },
+  ],
+}

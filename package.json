@@ -1,0 +1,117 @@
+{
+  "name": "task-runner",
+  "displayName": "Task Runner",
+  "description": "Run tasks.json tasks from the status bar. One carrot, one click, live running status.",
+  "version": "1.0.0",
+  "publisher": "mertcolakogl",
+  "license": "MIT",
+  "icon": "images/task-runner-logo-256.png",
+  "galleryBanner": {
+    "color": "#F26B3A",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mertcolakogl/task-runner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mertcolakogl/task-runner/issues"
+  },
+  "homepage": "https://github.com/mertcolakogl/task-runner#readme",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "tasks",
+    "tasks.json",
+    "task runner",
+    "status bar",
+    "run task"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Running a task follows the VS Code Workspace Trust decision: in an untrusted workspace no task is started and a warning is shown instead."
+    },
+    "virtualWorkspaces": false
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "task-runner.runTask",
+        "title": "Run Task...",
+        "category": "Task Runner",
+        "icon": "$(play)"
+      },
+      {
+        "command": "task-runner.runTaskByLabel",
+        "title": "Run Task by Label",
+        "category": "Task Runner"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "task-runner.runTaskByLabel",
+          "when": "false"
+        }
+      ]
+    },
+    "icons": {
+      "task-runner-left": {
+        "description": "Task Runner carrot, tilted left (-20deg)",
+        "default": {
+          "fontPath": "./assets/fonts/task-runner.woff",
+          "fontCharacter": "\\F103"
+        }
+      },
+      "task-runner-idle": {
+        "description": "Task Runner carrot, upright (idle)",
+        "default": {
+          "fontPath": "./assets/fonts/task-runner.woff",
+          "fontCharacter": "\\F102"
+        }
+      },
+      "task-runner-right": {
+        "description": "Task Runner carrot, tilted right (+20deg)",
+        "default": {
+          "fontPath": "./assets/fonts/task-runner.woff",
+          "fontCharacter": "\\F101"
+        }
+      }
+    },
+    "configuration": {
+      "title": "Task Runner",
+      "properties": {
+        "task-runner.tasksFile": {
+          "type": "string",
+          "default": ".vscode/tasks.json",
+          "description": "Path of the tasks file, relative to each workspace folder root."
+        },
+        "task-runner.labelPrefix": {
+          "type": "string",
+          "default": "",
+          "description": "Shared prefix stripped from task labels in the quick pick. Leave empty to show labels exactly as written."
+        },
+        "task-runner.statusBarText": {
+          "type": "string",
+          "default": "$(task-runner-idle)",
+          "markdownDescription": "Text of the status bar entry. Any codicon can be used, for example `$(task-runner-idle) Tasks`."
+        }
+      }
+    }
+  }
+}

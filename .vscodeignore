@@ -1,0 +1,7 @@
+**/*.vsix
+dist/**
+tools/**
+test/**
+.vscode/**
+.gitignore
+assets/assets-src/**
